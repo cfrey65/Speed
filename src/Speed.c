@@ -31,7 +31,7 @@ int InitGUI(const char* title) {
     // Call raylib init function
     InitWindow(mainGame->width, mainGame->height, title);
 
-    Texture2D big_red_button = LoadTexture("ctrl-rpp-main/resource/texture/big_red_button_3d.png");// Texture loading
+    
 
     // Aim to update+draw 60 times per second
     SetTargetFPS(60);

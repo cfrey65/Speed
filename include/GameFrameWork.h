@@ -1,4 +1,5 @@
 #pragma once
+#include <stddef.h>
 
 typedef struct gaming {
     void* game; //self explanatory
@@ -10,4 +11,4 @@ typedef struct gaming {
     void (*deleteEnv) (void* env); //frees enviroment
 } g;
 
-global g* mainGame;
+extern g* mainGame;
