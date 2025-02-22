@@ -32,17 +32,16 @@ void* pop(stack* stack) {
 }
 
 int main(int argc, char** args) {
-    if (argc == 2)
-    {
-        char* cmd = malloc(4 + strlen(args[1]) + 9);
+    if (argc == 2) {
+        char* cmd = malloc(9 + strlen(args[1]) + 29);
         if (!cmd) {
             printf("Could not allocate memory!");
             return 1;
         }
-        memcpy(cmd, "gcc ", 4);
+        memcpy(cmd, "gcc game\\", 9);
         memcpy(cmd+4, args[1], strlen(args[1]));
-        memcpy(cmd+4+strlen(args[1]), " -o game", 8);
-        cmd[4+strlen(args[1])+9] = '\0';
+        memcpy(cmd+4+strlen(args[1]), "-I\'C:\raylib\\lib\\src\' -o game", 28);
+        cmd[9+strlen(args[1])+29] = '\0';
         if (system(cmd) != 0) {
             printf("Game file compilation error!");
             return 1;
@@ -50,13 +49,13 @@ int main(int argc, char** args) {
         free(cmd);
         cmd = NULL;
         system("game.exe");
-        stack st = {.cap = mainGame->envSize*50, .size = 0, .remove = mainGame->deleteEnv, 
+        stack st = {.cap = mainGame->envSize*50, .size = 0, .remove = mainGame->deleteGameEnv, 
             .instSize = mainGame->envSize};
-        void* start = mainGame->getEnv(mainGame); //Fix Later
-        push(&st, start);
-        while (st.size > 0) {
-
+        InitWindow(mainGame->width, mainGame->length, "Purdoom");
+        mainGame->loadGame;
+        while (!WindowShouldClose()) {
+            mainGame->updateEnviroment;
         }
-    }
+    } 
     return 0;   
 }
