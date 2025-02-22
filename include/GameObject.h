@@ -3,13 +3,18 @@
 #include "Engine.h"
 
 typedef struct gaming {
-    void* game; //self explanatory
+    int width, height;
+    char gameState;
+
     size_t envSize; //do not touch (maybe)
-    void (*updateEnviroment) (void* game, char c); //game is the game state
-    //and char is for the input action
-    void* (*getEnv) (void* game); //check if things need to be updated
-    void* (*pause) (void* game); //checks for pause state
-    void (*deleteEnv) (void* env); //frees enviroment
 
     void (*drawGame) (); // Main draw function, called once per frame
+    void (*updateGame) (); // Called once per frame
+    void (*inputHandle) (); // Called once per frame
+
+    void (*pauseGame) ();
+    void (*resumeGame) ();
+    
+    void (*deleteEnv) (void* env); //frees enviroment
+    void 
 } g;

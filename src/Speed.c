@@ -1,14 +1,60 @@
 #include "Speed.h"
 
 g* mainGame = NULL;
+frameCount = 0;
 
-int CreateGame(int w, int h, const char* title) {
+int CreateGameInstance(int w, int h, const char* title) {
     mainGame = malloc(sizeof(gaming));
     if (mainGame == NULL) {
+        printf("*** ERROR: could not allocate memory for mainGame object. Exiting... ***\n");
+        return EXIT_FAILURE;
+    }
+
+    // Validate requested game dimensions
+    if (w < 1 || h < 1) {
+        printf("*** ERROR: invalid window dimensions (%d x %d). Exiting...\n", w, h);
+        return EXIT_FAILURE;
+    }
+
+    // Set mainGame fields for window width+height
+    mainGame->width = w;
+    mainGame->height = h;
+
+    // Initialize the game window
+    if (InitGUI(title) == EXIT_FAILURE) {
+        printf("*** ERROR: unable to initialize raylib window. Exiting...\n");
         return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
 }
 
-int InitGUI
+int InitGUI(const char* title) {
+    // Call raylib init function
+    InitWindow(mainGame->width, mainGame->height, title);
+    // Aim to update+draw 60 times per second
+    SetTargetFPS(60);
+    // Disable exiting with escape key (so you can make a pause menu)
+    // Change "KEY_NULL" --> "KEY_ESC" if you want to close app using the escape key
+    SetExitKey(KEY_NULL);
+
+    return EXIT_SUCCESS;
+}
+
+int GameLoop() {
+    while (!WindowShouldClose()) {
+        // 1. HANDLE INPUT
+        mainGame->inputHandle();
+        // 2. UPDATE GAME/OBJECTS
+        mainGame->updateGame();
+        // 3. DRAW THE SCREEN
+        mainGame->drawGame();
+
+        if (frameCount < 59) {
+            frameCount++;
+        }
+        else {
+            frameCount = 0;
+        }
+    }
+}
