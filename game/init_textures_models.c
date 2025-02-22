@@ -2,15 +2,37 @@
 
 //If you want to attach a texture to a model consult the castle example on Raylib
 void models() {
-    Model baseplate = LoadModel("Models/baseplate_v2.obj");
+    Model baseplate_v2 = LoadModel("Models/baseplate_v2.obj");
+    Model peteypie = LoadModel("Models/peteypie.png");
 }
 
 void textures(){
-    Texture2D epic_github_logo = LoadTexture(const char "Textures/epic_github_logo.png");
-    Texture2D spider_demon_model = LoadTexture(const char "Textures/spider_demon_model.png");
+    //PurDoom Textures
+    Texture2D epic_github_logo = LoadTexture("Textures/epic_github_logo.png");
+    Texture2D spider_demon_model = LoadTexture("Textures/spider_demon_model.png");
+    Texture2D purdue_pete = LoadTexture("Textures/purdue_pete.png");
+
+    //Purdue Themed Galaga Textures
+    Texture2D purdue_galaga_plane = LoadTexture("Textures/purdue_galaga_plane.png");
+    Texture2D purdue_scorpion = LoadTexture("Textures/purdue_scorpion.png");
+    Texture2D purdue_galaxian = LoadTexture("Textures/purdue_galaxian.png");
+    Texture2D purdue_galaga = LoadTexture("Textures/purdue_galaga.png");
+    Texture2D purdue_butterfly = LoadTexture("Textures/purdue_butterfly.png");
+    Texture2D purdue_bumblebee = LoadTexture("Textures/purdue_bumblebee.png");
+    Texture2D purdue_boss_galaga = LoadTexture("Textures/purdue_boss_galaga.png");
+    Texture2D purdue_boss_galaga_laser = LoadTexture("Textures/purdue_boss_galaga_laser.png");
+    Texture2D purdue_bosconian = LoadTexture("Textures/purdue_bosconian.png");
 }
 
 void load_textures_and_models() {
     textures();
     models();
+
+    //Connect textures and models with each other when needed
+    peteypie.materials[0].maps[MATERIAL_MAP_DIFFUSE].purdue_pete = purdue_pete;
 }
+
+/*Examples:
+Model model = LoadModel("resources/models/obj/castle.obj");                 // Load model
+Texture2D texture = LoadTexture("resources/models/obj/castle_diffuse.png"); // Load model texture
+model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;*/
