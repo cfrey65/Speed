@@ -6,6 +6,8 @@ int main(int argc, char** argv) {
     // 1. Load any fonts or textures needed
     //    (should be stored in ./game/resource/fonts, ./game/resource/textures)
     //TODO ... ... ...
+    
+    //Textures MUST be loaded after Window initialization (OpenGL context is required)
 
     // 2. Call "CreateGameInstance()" to allocate mem for the game instance
     if (CreateGameInstance(1000, 700) 

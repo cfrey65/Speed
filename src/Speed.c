@@ -30,6 +30,9 @@ int InitGUI(const char* title) {
 
     // Call raylib init function
     InitWindow(mainGame->width, mainGame->height, title);
+
+    
+
     // Aim to update+draw 60 times per second
     SetTargetFPS(60);
     // Disable exiting with escape key (so you can make a pause menu)
