@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Engine.h"
-
-typedef struct gaming {
+typedef struct _gaming{
     int width, height;
     char gameState;
 
@@ -16,5 +14,4 @@ typedef struct gaming {
     void (*resumeGame) ();
     
     void (*deleteEnv) (void* env); //frees enviroment
-    void 
-} g;
+} gaming;

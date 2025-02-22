@@ -1,3 +1,4 @@
+#include "Speed.h"
 #include "Game.h"
 
 int main(int argc, char** argv) {
@@ -7,7 +8,7 @@ int main(int argc, char** argv) {
     //TODO ... ... ...
 
     // 2. Call "CreateGameInstance()" to allocate mem for the game instance
-    if (CreateGameInstance(1000, 700, "PurDOOM/Game Engine") 
+    if (CreateGameInstance(1000, 700) 
         == EXIT_FAILURE) {
         if (mainGame != NULL) {
             free(mainGame);
@@ -16,14 +17,14 @@ int main(int argc, char** argv) {
     }
 
     // 3. Assign the game's function pointers to the fields of "mainGame"
-    mainGame->drawGame = GAME_drawGame();
-    mainGame->updateGame = GAME_updateGame();
-    mainGame->inputHandle = GAME_inputHandle();
-    mainGame->pauseGame = GAME_pauseGame();
-    mainGame->resumeGame = GAME_resumeGame();
+    mainGame->drawGame = GAME_drawGame;
+    mainGame->updateGame = GAME_updateGame;
+    mainGame->inputHandle = GAME_inputHandle;
+    mainGame->pauseGame = GAME_pauseGame;
+    mainGame->resumeGame = GAME_resumeGame;
     
     // 4. Initialize the game window
-    if (InitGUI(title) == EXIT_FAILURE) {
+    if (InitGUI("PurDOOM/Game Engine") == EXIT_FAILURE) {
         printf("*** ERROR: unable to initialize raylib window. Exiting...\n");
         if (mainGame != NULL) {
             free(mainGame);
@@ -46,9 +47,9 @@ int main(int argc, char** argv) {
     return EXIT_SUCCESS;
 }
 
-void GAME_drawGame {
+void GAME_drawGame() {
     // Set background color
-    //ClearBackground((Color){red, green, blue, alpha});
+    ClearBackground(RED);
 }
 
 void GAME_updateGame() {
