@@ -1,18 +1,21 @@
 #include "Engine.h"
+#include "GameFrameWork.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 
+extern g* mainGame;
+
 typedef struct st{
-    int cap;
-    int size;
+    size_t cap;
+    size_t size;
     void* mem;
     void (*remove) (void*);
-    int instSize;
+    size_t instSize;
 } stack;
 
-void push(void* inst, stack* stack) {
+void push(stack* stack, void* inst) {
     if (stack->size+1 > stack->cap) {
         stack->mem = realloc(stack->mem, stack->cap*2);
         stack->cap = stack->cap*2;
@@ -46,5 +49,18 @@ int main(int argc, char** args) {
     free(cmd);
     cmd = NULL;
     system("game.exe");
+    stack st = {.cap = mainGame->envSize*50, .size = 0, .remove = mainGame->deleteEnv, 
+        .instSize = mainGame->envSize};
+    void* start = mainGame->getEnv();
+    push(&st, start);
+    while (st.size > 0) {
+        char c;
+        c = getchar();
+        for (int i = 0; i < mainGame->numInt; i++) {
+            if (c == mainGame->interrupts[i]) {
+                mainGame->updateEnv(c);
+            }
+        }
+    }
     return 0;
 }

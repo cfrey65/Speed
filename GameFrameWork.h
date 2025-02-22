@@ -1,8 +1,12 @@
-typedef struct g {
+typedef struct gaming {
     void* game;
-    void (*updateEnviroment) (void* game);
+    size_t envSize = 1;
+    void (*updateEnviroment) (void* game, char c);
     void* (*getEnv) (void* game);
     void* (*pause) (void* game);
-} game;
+    void (*deleteEnv) (void* env);
+    char* interrupts;
+    int numInt;
+} g;
 
-extern game mainGame;
+global g* mainGame;
