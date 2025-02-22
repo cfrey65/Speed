@@ -31,7 +31,7 @@ int InitGUI(const char* title) {
     // Call raylib init function
     InitWindow(mainGame->width, mainGame->height, title);
 
-    
+    Texture2D texture = LoadTexture("ctrl-rpp-main/resource/texture/epic_github_logo.png");
 
     // Aim to update+draw 60 times per second
     SetTargetFPS(60);

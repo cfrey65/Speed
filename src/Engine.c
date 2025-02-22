@@ -31,7 +31,7 @@ void* pop(stack* stack) {
     return inst;
 }
 
-int main(int argc, char** args) {
+/* int main(int argc, char** args) {
     if (argc == 2)
     {
         char* cmd = malloc(4 + strlen(args[1]) + 9);
@@ -62,7 +62,7 @@ int main(int argc, char** args) {
                     mainGame->updateEnv(c);
                 }
             }
-        }*/
+        }
     }
     return 0;   
-}
+}*/
