@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "GameFrameWork.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,5 +31,12 @@ void* pop(stack* stack) {
 }
 
 int main(char** args) {
-    
+    char* cmd = "gcc " + args + "-o game";
+    int err = system(cmd);
+    if (err != 0) {
+        printf("Game file compilation error!");
+        return 1;
+    }
+    system("./game");
+    return 0;
 }
