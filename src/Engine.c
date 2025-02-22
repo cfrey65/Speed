@@ -54,7 +54,7 @@ int main(int argc, char** args) {
         InitWindow(mainGame->width, mainGame->length, "Purdoom");
         mainGame->loadGame;
         while (!WindowShouldClose()) {
-            mainGame->updateEnviroment;
+            mainGame->updateGame;
         }
     } 
     return 0;   
