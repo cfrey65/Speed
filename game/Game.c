@@ -54,8 +54,14 @@ void GAME_drawGame() {
     ClearBackground(RED);
 }
 
-void GAME_updateGame() {
+#Loads all textures and models.
+void GAME_loadGame() {
 
+}
+
+void GAME_updateGame(g* game) {
+    Camera3D oldCam = game->cam.pos;
+    UpdateCamera(&ga)
 }
 
 void GAME_inputHandle() {
