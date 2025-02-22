@@ -1,4 +1,3 @@
-#include "Speed.h"
 #include "Game.h"
 
 int main(int argc, char** argv) {
@@ -54,9 +53,9 @@ void GAME_drawGame() {
     ClearBackground(RED);
 }
 
-#Loads all textures and models.
+//Loads all textures and models.
 void GAME_loadGame() {
-
+    load_textures_and_models();
 }
 
 void GAME_updateGame(g* game) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Speed.h"
+#include "init_textures_models.c"
 
 // Implementations pointed to by "mainGame"
 // The actual "game code"
