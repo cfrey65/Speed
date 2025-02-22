@@ -28,4 +28,4 @@ int InitGUI(const char* title);
 int GameLoop();
 
 // Does nothing, just reduces raylib startup spam
-void CustomLog(int msgType, const char *text, va_list args); 
+void CustomLog(int msgType, const char *text, va_list args);
