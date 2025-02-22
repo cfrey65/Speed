@@ -20,16 +20,14 @@ int CreateGameInstance(int w, int h, const char* title) {
     mainGame->width = w;
     mainGame->height = h;
 
-    // Initialize the game window
-    if (InitGUI(title) == EXIT_FAILURE) {
-        printf("*** ERROR: unable to initialize raylib window. Exiting...\n");
-        return EXIT_FAILURE;
-    }
-
     return EXIT_SUCCESS;
 }
 
 int InitGUI(const char* title) {
+    // Sets raylib logger function to output nothing, reduces console spam
+    // Comment this line out when there are raylib errors to see the causes
+    SetTraceLogCallback(CustomLog);
+
     // Call raylib init function
     InitWindow(mainGame->width, mainGame->height, title);
     // Aim to update+draw 60 times per second
@@ -57,4 +55,8 @@ int GameLoop() {
             frameCount = 0;
         }
     }
+}
+
+void CustomLog(int msgType, const char *text, va_list args) {
+    // Does nothing, just takes startup output from raylib so there is no console spam
 }

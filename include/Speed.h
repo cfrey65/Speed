@@ -23,3 +23,6 @@ int InitGUI(const char* title);
 //      - update game state and objects
 //      - draw screen
 int GameLoop();
+
+// Does nothing, just reduces raylib startup spam
+void CustomLog(int msgType, const char *text, va_list args); 
