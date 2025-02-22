@@ -36,44 +36,49 @@ int main(int argc, char** argv) {
             free(mainGame);
         }
         return EXIT_FAILURE;
-    }
+    }*/
 
     // 3. Assign the game's function pointers to the fields of "mainGame"
-    mainGame->drawGame = GAME_drawGame;
+    //mainGame->game = &GAME_createInstance(1000, 700);
+    GAME cur = {.paused = 0};
+    mainGame->game = cur;
     mainGame->updateGame = GAME_updateGame;
     mainGame->inputHandle = GAME_inputHandle;
-    mainGame->pauseGame = GAME_pauseGame;
-    mainGame->resumeGame = GAME_resumeGame;
     
     // 4. Initialize the game window
-    if (InitGUI("PurDOOM/Game Engine") == EXIT_FAILURE) {
+    /*if (InitGUI("PurDOOM/Game Engine") == EXIT_FAILURE) {
         printf("*** ERROR: unable to initialize raylib window. Exiting...\n");
         if (mainGame != NULL) {
             free(mainGame);
         }
         return EXIT_FAILURE;
     }
+<<<<<<< HEAD
 
     // Load TEXTURES (./game/resource/textures)
     //Textures MUST be loaded after Window initialization (OpenGL context is required)
     GAME* game_state = malloc(sizeof(GAME));
     GAME_loadGame(game_state);
 
+=======
+    */
+>>>>>>> 219bc7593d3fb6e8d5fa986324e4365551641359
     // 5. Start the main loop (call GameLoop())
-    if (GameLoop() == EXIT_FAILURE) {
+    /*if (GameLoop() == EXIT_FAILURE) {
         // Trust that the callee already printed error msg
         return EXIT_FAILURE;
-    }
+    }*/
 
     // 6. De-init game, unload fonts and textures
     //TODO ... ... ...
 
     // 7. Free mainGame, anything else that was allocated
-    free(mainGame);
+    //free(mainGame);
 
     return EXIT_SUCCESS;
 }
 
+<<<<<<< HEAD
 void GAME_loadGame(void* game_state) {
     GAME* gm = (GAME) game_state;
 
@@ -93,16 +98,47 @@ void GAME_loadGame(void* game_state) {
     // NOTE: By default each cube is mapped to one part of texture atlas
     Texture2D texture = LoadTexture("c:\\raylib-master\\examples\\models\\resources\\models\\iqm\\guytex.png");    // Load map texture
     gm->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;    // Set map diffuse texture
+=======
+
+#Loads all textures and models.
+void GAME_loadGame(void* g) {
+    GAME* g = (GAME) g;
+
+    // Define the camera to look into our 3d world
+    g->cam = (Camera){ 0 };
+    g->cam.position = (Vector3){ 16.0f, 14.0f, 16.0f };     // Camera position
+    g->cam.target = (Vector3){ 0.0f, 0.0f, 0.0f };          // Camera looking at point
+    g->cam.up = (Vector3){ 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
+    g->cam.fovy = 45.0f;                                    // Camera field-of-view Y
+    g->cam.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
+
+    Image imMap = LoadImage("resources/cubicmap.png");      // Load cubicmap image (RAM)
+    g->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
+    Mesh mesh = GenMeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
+    g->model = LoadModelFromMesh(mesh);
+
+    // NOTE: By default each cube is mapped to one part of texture atlas
+    Texture2D texture = LoadTexture("c:\\raylib-master\\examples\\models\\resources\\models\\iqm\\guytex.png");    // Load map texture
+    g->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;    // Set map diffuse texture
+>>>>>>> 219bc7593d3fb6e8d5fa986324e4365551641359
 
     Vector3 mapPosition = { -16.0f, 0.0f, -8.0f };          // Set model position
 
     UnloadImage(image);     // Unload cubesmap image from RAM, already uploaded to VRAM
                              // Pause camera orbital rotation (and zoom)
+<<<<<<< HEAD
     mainGame->game = gm;
 }
 
 void GAME_updateGame(void* game_state) {
     GAME* gm = (GAME*) game_state;
+=======
+    mainGame->game = g;
+}
+
+void GAME_updateGame(void* game) {
+    GAME* g = (GAME*) game;
+>>>>>>> 219bc7593d3fb6e8d5fa986324e4365551641359
     if (!game->paused) {
         Camera3D oldCam = game->cam.pos;
         UpdateCamera(&game->cam, CAMERA_FIRST_PERSON);
@@ -118,7 +154,11 @@ void GAME_updateGame(void* game_state) {
         ClearBackground(GOLD);
         BeginMode3D(game->cam);
         DrawModel(game->model, game->mapPosition, 1.0f, BLACK);   
+<<<<<<< HEAD
         DrawModel(game->playerModel, game->playerPos, 1.0f, BLACK);  
+=======
+        DrawModel(game->playerModel, game->cam.pos, 1.0f, BLACK);  
+>>>>>>> 219bc7593d3fb6e8d5fa986324e4365551641359
         EndMode3D();
         DrawTextureEx(game->cubicmap, (Vector2){ GetScreenWidth() - game->cubicmap.width*4.0f - 20, 20.0f }, 0.0f, 4.0f, MAROON);
         DrawRectangleLines(GetScreenWidth() - cubicmap.width*4 - 20, 20, game->cubicmap.width*4, cubicmap.height*4, ORANGE);
@@ -143,7 +183,36 @@ void GAME_inputHandle(void* game) {
     }
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         DrawCubeWires(Vector3 position, float width, float height, float length, BLACK);
+<<<<<<< HEAD
         hammer h = {.}
     }
     mainGame->game = game;
 }
+=======
+    }
+    mainGame->game = game;
+}
+
+
+typedef struct hammer {
+    float speed;
+    Vector3 pos;
+} hammer;
+
+typedef struct enemy{
+    Model model;
+    Vector3 pos;
+} enemy;
+
+typedef struct env {
+    bool paused;
+    Texture2D cubicmap;
+    Camera3D cam;
+    Vector3 playerPos;
+    Vector3 mapPos;
+    Model model;
+    Model playerModel;
+    enemy* enemies;
+    hammer* hammers;
+} GAME;
+>>>>>>> 219bc7593d3fb6e8d5fa986324e4365551641359
