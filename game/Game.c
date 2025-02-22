@@ -37,17 +37,18 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    // 6. Close the window, de-init
+    // 6. De-init game, unload fonts and textures
+    //TODO ... ... ...
 
-    // 7. Unload fonts and textures, if any
-
-    // 8. Free mainGame, anything else that was allocated
+    // 7. Free mainGame, anything else that was allocated
+    free(mainGame);
 
     return EXIT_SUCCESS;
 }
 
 void GAME_drawGame {
-
+    // Set background color
+    //ClearBackground((Color){red, green, blue, alpha});
 }
 
 void GAME_updateGame() {
@@ -60,7 +61,7 @@ void GAME_inputHandle() {
 
 void GAME_pauseGame() {
 
-    
+
 }
 
 void GAME_resumeGame() {
