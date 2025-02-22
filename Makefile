@@ -4,7 +4,7 @@ CCFLAGS = -std=c99 -g -D_DEBUG -Wall -pedantic #Removed -Werror for testing, add
 # Get list of the ENGINE's source files
 SOURCES = $(wildcard src/*.c)
 # Get list of the GAME's source files
-#SOURCES = $(wildcard game/*.c) #Commented out because of duplicate defintions of main
+SOURCES = $(wildcard game/*.c) #Commented out because of duplicate defintions of main
 # Local header files
 INCLUDE = -I./include
 
