@@ -31,7 +31,7 @@ void* pop(stack* stack) {
     return inst;
 }
 
-/* int main(int argc, char** args) {
+int main(int argc, char** args) {
     if (argc == 2)
     {
         char* cmd = malloc(4 + strlen(args[1]) + 9);
@@ -52,17 +52,11 @@ void* pop(stack* stack) {
         system("game.exe");
         stack st = {.cap = mainGame->envSize*50, .size = 0, .remove = mainGame->deleteEnv, 
             .instSize = mainGame->envSize};
-        /*void* start = mainGame->getEnv(); //Fix Later
+        void* start = mainGame->getEnv(mainGame); //Fix Later
         push(&st, start);
         while (st.size > 0) {
-            char c;
-            c = getchar();
-            for (int i = 0; i < mainGame->numInt; i++) {
-                if (c == mainGame->interrupts[i]) {
-                    mainGame->updateEnv(c);
-                }
-            }
+
         }
     }
     return 0;   
-}*/
+}
