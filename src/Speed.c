@@ -1,9 +1,9 @@
 #include "Speed.h"
 
-g* mainGame = NULL;
-frameCount = 0;
+gaming* mainGame = NULL;
+int frameCount = 0;
 
-int CreateGameInstance(int w, int h, const char* title) {
+int CreateGameInstance(int w, int h) {
     mainGame = malloc(sizeof(gaming));
     if (mainGame == NULL) {
         printf("*** ERROR: could not allocate memory for mainGame object. Exiting... ***\n");
@@ -46,7 +46,9 @@ int GameLoop() {
         // 2. UPDATE GAME/OBJECTS
         mainGame->updateGame();
         // 3. DRAW THE SCREEN
-        mainGame->drawGame();
+        BeginDrawing();
+            mainGame->drawGame();
+        EndDrawing();
 
         if (frameCount < 59) {
             frameCount++;
@@ -55,6 +57,8 @@ int GameLoop() {
             frameCount = 0;
         }
     }
+
+    return EXIT_SUCCESS;
 }
 
 void CustomLog(int msgType, const char *text, va_list args) {
