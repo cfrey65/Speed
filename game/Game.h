@@ -2,6 +2,8 @@
 
 #include "Speed.h"
 
+extern gaming* mainGame;
+
 /////////////////////////////
 // Global texture variables
 /////////////////////////////

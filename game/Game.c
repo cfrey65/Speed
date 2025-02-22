@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "textures_models.h"
 
 typedef struct hammer {
     float speed;
@@ -23,6 +23,8 @@ typedef struct env {
     hammer* hammers;
 } GAME;
 
+gaming* mainGame = NULL;
+
 int main(int argc, char** argv) {
     // Fairly basic game structure
     // 1. Load any fonts needed
@@ -38,15 +40,19 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     }
 
-    // 3. Assign the game's function pointers to the fields of "mainGame"
-    //mainGame->game = &GAME_createInstance(1000, 700);
+    // 3. Assign GAME STATE fields (for the behavior of the game on startup)
+    //    Also GAME OBJECT'S function pointers, which are called directly by the "Speed.c" engine
     GAME cur = {.paused = 0};
-    mainGame->game = cur;
+    mainGame->game = (void*)&cur;
     mainGame->updateGame = GAME_updateGame;
     mainGame->inputHandle = GAME_inputHandle;
+    mainGame->drawGame = GAME_drawGame;
+    mainGame->pauseGame = GAME_pauseGame;
+    mainGame->resumeGame = GAME_resumeGame;
+
     
     // 4. Initialize the game window
-    /*if (InitGUI("PurDOOM/Game Engine") == EXIT_FAILURE) {
+    if (InitGUI("PurDOOM/Game Engine") == EXIT_FAILURE) {
         printf("*** ERROR: unable to initialize raylib window. Exiting...\n");
         if (mainGame != NULL) {
             free(mainGame);
@@ -60,18 +66,48 @@ int main(int argc, char** argv) {
     GAME_loadGame(game_state);
 
     // 5. Start the main loop (call GameLoop())
-    /*if (GameLoop() == EXIT_FAILURE) {
+    if (GameLoop() == EXIT_FAILURE) {
         // Trust that the callee already printed error msg
         return EXIT_FAILURE;
-    }*/
+    }
 
     // 6. De-init game, unload fonts and textures
-    //TODO ... ... ...
+    unload_textures_and_models();
 
     // 7. Free mainGame, anything else that was allocated
-    //free(mainGame);
+    free(mainGame);
 
     return EXIT_SUCCESS;
+}
+
+void GAME_pauseGame() {
+
+}
+
+void GAME_resumeGame() {
+
+}
+
+void GAME_drawGame() {
+    ClearBackground(RED);
+}
+
+void GAME_inputHandle(void* game) {
+    GAME* game = (GAME*) game;
+    if (IsKeyPressed('p') && game->paused == 0){
+        if (game->paused) {
+            game->paused = 0;
+        } else {
+            game->paused = 1;
+            mainGame->game = game;
+            return;
+        }
+    }
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        DrawCubeWires(Vector3 position, float width, float height, float length, BLACK);
+        hammer h = {.}
+    }
+    mainGame->game = game;
 }
 
 void GAME_loadGame(void* game_state) {
@@ -126,24 +162,6 @@ void GAME_updateGame(void* game_state) {
         DrawRectangle(GetScreenWidth() - game->cubicmap.width*4 - 20 + playerCellX*4, 20 + playerCellY*4, 4, 4, RED);
         DrawFPS(10, 10);
         EndDrawing();
-    }
-    mainGame->game = game;
-}
-
-void GAME_inputHandle(void* game) {
-    GAME* game = (GAME*) game;
-    if (IsKeyPressed('p') && game->paused == 0){
-        if (game->paused) {
-            game->paused = 0;
-        } else {
-            game->paused = 1;
-            mainGame->game = game;
-            return;
-        }
-    }
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        DrawCubeWires(Vector3 position, float width, float height, float length, BLACK);
-        hammer h = {.}
     }
     mainGame->game = game;
 }

@@ -30,7 +30,7 @@ void models() {
     peteypie = LoadModel("game/models/peteypie.png");
 }
 
-void textures(){
+void textures() {
     //PurDoom Textures
     epic_github_logo = LoadTexture("game/textures/epic_github_logo.png");
     spider_demon_model = LoadTexture("game/textures/spider_demon_model.png");
@@ -66,7 +66,7 @@ void unload_models() {
     UnloadModel(peteypie);
 }
 
-void unload_textures(){
+void unload_textures() {
     //Unload PurDoom
     UnloadTexture(epic_github_logo);
     UnloadTexture(spider_demon_model);
