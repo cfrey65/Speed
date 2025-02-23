@@ -27,7 +27,7 @@ typedef struct env {
 } GAME;
 
 Vector3 floorplan_position;
-Vector3 enemy_positio
+Vector3 purdue_pete_position;
 int MOVEMENT_SPEED_SCALE = 3;
 int LOOK_SPEED_SCALE = 2;
 
@@ -165,7 +165,8 @@ void GAME_loadGame(void* game_state) {
     gm->cam.fovy = 45.0f;                                    // Camera field-of-view Y
     gm->cam.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
 
-    floorplan_position = (Vector3){0.0f, 0.0f, 0.0f }; //Wish this could be initialized seperately from the other models
+    floorplan_position = (Vector3){0.0f, 0.0f, 0.0f };
+    purdue_pete_position = (Vector3){} //Wish this could be initialized seperately from the other models
     // Load cubicmap image (RAM)
     /*gm->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
     Mesh mesh = GenMfeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
@@ -173,7 +174,7 @@ void GAME_loadGame(void* game_state) {
 
     // NOTE: By default each cube is mapped to one part of texture atlas
     //Texture2D texture = LoadTexture("game/textures/guytex.png");    // Load map texture
-    //gm->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;    // Set map diffuse texture
+    //gm->model.matersials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;    // Set map diffuse texture
 
     gm->mapPos  = (Vector3){ -16.0f, 0.0f, -8.0f }; // Set model position
 

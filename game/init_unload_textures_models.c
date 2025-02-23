@@ -31,7 +31,7 @@ BoundingBox floorplan_bbox;
 void models() {
     floorplan_v1 = LoadModel("game/models/floorplan_v1.obj");
     
-    //peteypie = LoadModel("game/models/peteypie.png");
+    peteypie = LoadModel("game/models/peteypie.png");
 }
 
 void textures() {
@@ -59,6 +59,7 @@ void load_textures_and_models() {
 
     //Connect textures and models with each other when needed
     floorplan_v1.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
+    peteypie.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = purdue_pete;
     floorplan_bbox = GetMeshBoundingBox(floorplan_v1.meshes[0]);
 }
 
