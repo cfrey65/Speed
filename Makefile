@@ -20,6 +20,7 @@ else
 
 	CFLAGS += -D_DEFAULT_SOURCE
 endif
+LDFLAGS += -L./lib
 
 # Check if game implemenation exists (must be a file named "Game.c" 
 # inside directory "/game"; must also define main() function)
