@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Speed.h"
-
-extern gaming* mainGame;
-
+//mtllib floorplan_v1.mtl
 /////////////////////////////
 // Global texture variables
 /////////////////////////////
@@ -17,15 +15,16 @@ extern Texture2D purdue_boss_galaga_laser; extern Texture2D purdue_bosconian;
 /////////////////////////////
 // Global model variables
 /////////////////////////////
-extern Model baseplate_v2;
+extern Model floorplan_v1;
 extern Model peteypie;
+extern Vector3 floorplan_position;
 
 // Implementations pointed to by "mainGame"
 // The actual "game code"
 // Called by the game engine each frame or upon specific events
 void GAME_loadGame(void* game_state);
 void GAME_drawGame();
-void GAME_updateGame(void* game_state);
+void GAME_updateGame();
 void GAME_inputHandle();
 void GAME_pauseGame();
 void GAME_resumeGame();

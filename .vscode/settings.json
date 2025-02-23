@@ -2,6 +2,7 @@
     "files.associations": {
         "game.h": "c",
         "cstdlib": "c",
-        "textures_models.h": "c"
+        "textures_models.h": "c",
+        "speed.h": "c"
     }
 }

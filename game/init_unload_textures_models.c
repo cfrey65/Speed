@@ -21,13 +21,13 @@ Texture2D purdue_bosconian;
 /////////////////////////////
 // Global model variables
 /////////////////////////////
-Model baseplate_v2;
+Model floorplan_v1;
 Model peteypie;
 
 //If you want to attach a texture to a model consult the castle example on Raylib
 void models() {
-    baseplate_v2 = LoadModel("game/models/baseplate_v2.obj");
-    peteypie = LoadModel("game/models/peteypie.png");
+    floorplan_v1 = LoadModel("game/models/floorplan_v1.obj");
+    //peteypie = LoadModel("game/models/peteypie.png");
 }
 
 void textures() {
@@ -53,7 +53,7 @@ void load_textures_and_models() {
     models();
 
     //Connect textures and models with each other when needed
-    peteypie.materials[0].maps[MATERIAL_MAP_DIFFUSE].purdue_pete = purdue_pete;
+    floorplan_v1.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = purdue_pete;
 }
 
 /*Examples:
@@ -62,8 +62,8 @@ Texture2D texture = LoadTexture("resources/models/obj/castle_diffuse.png"); // L
 model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;*/
 
 void unload_models() {
-    UnloadModel(baseplate_v2);
-    UnloadModel(peteypie);
+    UnloadModel(floorplan_v1);
+    //UnloadModel(peteypie);
 }
 
 void unload_textures() {
