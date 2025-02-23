@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = -std=c99 -g -D_DEBUG -Wall -pedantic #Removed -Werror for testing, add back after testing
+CCFLAGS = -std=c99 -g -D_DEBUG -Wall -Werror -pedantic #Removed -Werror for testing, add back after testing
 
 # Get list of the ENGINE's source files
 SOURCES = $(wildcard src/*.c)
