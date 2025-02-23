@@ -265,25 +265,56 @@ void GAME_loadGame(void* game_state) {
 
 }
 
-bool WallProbe(Camera3D* camera) {
-    // Get unit vector direction of camera view (adapted from MatrixLookAt() in raylib source)
-    CamHat.x = camera->position.x - camera->target.x;
-    CamHat.y = camera->position.y - camera->target.y;
-    CamHat.z = camera->position.z - camera->target.z;
+bool WallProbe(Camera3D* camera, Vector3* playerPos) {
+    // Shorthand variables for camera, player position
+    float cx = camera->position.x;
+    float cy = camera->position.y;
+    float cz = camera->position.z;
 
+    // Get unit vector direction of camera view (adapted from MatrixLookAt() in raylib source)
+    CamHat.x = cx - camera->target.x;
+    CamHat.y = cy - camera->target.y;
+    CamHat.z = cz - camera->target.z;
     CamHatLen = sqrtf(CamHat.x*CamHat.x + CamHat.y*CamHat.y + CamHat.z*CamHat.z);
     if (CamHatLen == 0.0f) CamHatLen = 1.0f;
-    
     CamHat.x *= (1.0f / CamHatLen);
     CamHat.y *= (-1.0f / CamHatLen);
     CamHat.z *= (1.0f / CamHatLen);
     // Print cam direction to terminal
     //printf("%.2f %.2f %.2f\n", CamHat.x, CamHat.y, CamHat.z);
 
-    // Check if unit movement would go out-of-bounds
-    // for any defined bounds rectangles
-    // for (int r = 0; r < )
-    //     if ((CamHat.x * M_STEP >))
+    // Check if unit movement would go out-of-bounds for any collision_area in "map_bounds"
+    for (int bo = 0; bo < map_bounds.boundsN; bo++) {
+        // Shorthand variable name for current collision_area
+        collision_area* bi = &(map_bounds.bounds[bo]);
+
+        //printf("%d %d -- %d\n", bi->range[0], bi->range[1], bi->bound);
+
+        // Checking if player within X-range, and if crossing Y-value
+        if (bi->rangeX) {
+            // Player in-range, could possibly collide
+            if (cx > bi->range[0] && cx < bi->range[1]) {
+                //printf("PLAYER IN X RANGE %d\n", bo);
+                // Could player cross (below->above OR above->below)?
+                if ((cy < bi->bound && (cy + CamHat.y) >= bi->bound) ||
+                    (cy > bi->bound && (cy + CamHat.y) <= bi->bound)) {
+                    return true;
+                }
+            }
+        }
+        // Checking if player within Y-range, and if crossing X-value
+        else {
+            // Player in-range, could possibly collide
+            if (cy > bi->range[0] && cy < bi->range[1]) {
+                // Could player cross (left->right OR right->left)?
+                if ((cx < bi->bound && (cx + CamHat.x) >= bi->bound) ||
+                    (cx > bi->bound && (cx + CamHat.x) <= bi->bound)) {
+                    return true;
+                }
+            }
+        }
+    }
+        
 
     return false;
 }
@@ -294,8 +325,21 @@ void UpdatePlayer() {
         
     // If one unit move would put the player out of bounds,
     // prevent the movement from happening
-    if (WallProbe(cam)) {
-        return;
+    if (WallProbe(cam, &(game->playerPos))) {
+        UpdateCameraPro(&game->cam,
+            (Vector3){
+                -1.0f * M_STEP * (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) +      // Move forward-backward
+                M_STEP * (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)),    
+                -1.0f * M_STEP * (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) +   // Move right-left
+                M_STEP * (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT)),
+                0.0f                                                // Move up-down
+            },
+            (Vector3){
+                0.0f,                            // Rotation: yaw
+                0.0f,                            // Rotation: pitch
+                0.0f                                                // Rotation: roll
+            },
+            GetMouseWheelMove()*2.0f);
     }
 
     UpdateCameraPro(&game->cam,

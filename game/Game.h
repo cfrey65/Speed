@@ -43,4 +43,4 @@ void GAME_inputHandle();
 void GAME_pauseGame();
 void GAME_resumeGame();
 // Check if player is about to move out-of-bounds
-bool WallProbe(Camera3D* camera);
+bool WallProbe(Camera3D* camera, Vector3* playerPos);
