@@ -3,6 +3,8 @@
 typedef struct _gaming{
     int width, height;
     char gameState;
+    void* game;
+    Camera3D cam;
 
     size_t envSize; //do not touch (maybe)
 
