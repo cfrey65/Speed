@@ -27,6 +27,11 @@ Model peteypie;
 Model demon_spider_monkey_model;
 Model racetrack_v1;
 Model racetrack_inside_v1;
+Model Walc_Baseplate;
+Model Walc_Backwall;
+Model Walc_Door;
+Model Walc_Sidewall2;
+Model Walc_SideWalls;
 
 BoundingBox floorplan_bbox;
 
@@ -36,6 +41,11 @@ void models() {
     demon_spider_monkey_model = LoadModel("game/models/demon_spider_monkey_model.obj");
     peteypie = LoadModel("game/models/peteypie.obj");
     racetrack_v1 = LoadModel("game/models/racetrack_v1.obj");
+    Walc_Baseplate = LoadModel("game/models/Walc_Baseplate.obj");
+    Walc_Backwall = LoadModel("game/models/Walc_Backwall.obj");
+    Walc_Door = LoadModel("game/models/Walc_Door.obj");
+    Walc_Sidewall2 = LoadModel("game/models/Walc_Sidewall2.obj");
+    Walc_SideWalls = LoadModel("game/models/Walc_SideWalls.obj");
 }
 
 void textures() {
@@ -63,6 +73,11 @@ void load_textures_and_models() {
 
     //Connect textures and models with each other when needed
     floorplan_v1.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
+    Walc_Baseplate.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
+    Walc_Backwall.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
+    Walc_Door.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
+    Walc_Sidewall2.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
+    Walc_SideWalls.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
     peteypie.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
     demon_spider_monkey_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = spider_demon_model;
     floorplan_bbox = GetMeshBoundingBox(floorplan_v1.meshes[0]);

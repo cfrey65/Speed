@@ -29,6 +29,8 @@ typedef struct env {
 Vector3 floorplan_position;
 Vector3 purdue_pete_position;
 Vector3 spider_demon_position;
+Vector3 baseplate_position;
+Vector3 walc_backwall_pos;
 int MOVEMENT_SPEED_SCALE = 3;
 int LOOK_SPEED_SCALE = 2;
 
@@ -116,7 +118,8 @@ void GAME_drawGame() {
         DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE);
         DrawModelEx(peteypie, purdue_pete_position, (Vector3){0, 1, 0}, 90, (Vector3){3, 3, 3}, GOLD);
         DrawModelEx(demon_spider_monkey_model, spider_demon_position, (Vector3){0, 1, 0}, 90, (Vector3){3, 3, 3}, RED);
-        
+        DrawModelEx(Walc_Baseplate, baseplate_position, (Vector3){1, 0, 0}, 90, (Vector3){1000, 1000, 1000}, GRAY);
+        DrawModelEx(Walc_Backwall, walc_backwall_pos, (Vector3){1, 0, 0}, -90, (Vector3){1000, 1000, 1000}, GRAY);
     EndMode3D();
     
     DrawTextureEx(*cubicmap, (Vector2){ GetScreenWidth() - cubicmap->width*4.0f - 20, 20.0f }, 0.0f, 4.0f, MAROON);
@@ -177,6 +180,8 @@ void GAME_loadGame(void* game_state) {
     floorplan_position = (Vector3){0.0f, 0.0f, 0.0f };
     purdue_pete_position = (Vector3){-50.0f, 4.5f, -39.0f };
     spider_demon_position = (Vector3){-50.0f, 4.5f, 0.0f};
+    baseplate_position = (Vector3){-200.0f, 0.0f, 0.0f};
+    walc_backwall_pos = (Vector3){-121.0f, 20.0f, 5.0f};
     // Load cubicmap image (RAM)
     /*gm->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
     Mesh mesh = GenMfeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
