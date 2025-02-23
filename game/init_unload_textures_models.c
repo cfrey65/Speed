@@ -25,6 +25,8 @@ Texture2D Industrial;
 Model floorplan_v1;
 Model peteypie;
 Model demon_spider_monkey_model;
+Model racetrack_v1;
+Model racetrack_inside_v1;
 
 BoundingBox floorplan_bbox;
 
@@ -32,7 +34,8 @@ BoundingBox floorplan_bbox;
 void models() {
     floorplan_v1 = LoadModel("game/models/floorplan_v1.obj");
     demon_spider_monkey_model = LoadModel("game/models/demon_spider_monkey_model.obj");
-    peteypie = LoadModel("game/models/peteypie.png");
+    peteypie = LoadModel("game/models/peteypie.obj");
+    racetrack_v1 = LoadModel("game/models/racetrack_v1.obj");
 }
 
 void textures() {
@@ -60,7 +63,7 @@ void load_textures_and_models() {
 
     //Connect textures and models with each other when needed
     floorplan_v1.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
-    peteypie.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = purdue_pete;
+    peteypie.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
     demon_spider_monkey_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = spider_demon_model;
     floorplan_bbox = GetMeshBoundingBox(floorplan_v1.meshes[0]);
 }
