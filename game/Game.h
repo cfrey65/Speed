@@ -17,6 +17,7 @@ extern Texture2D Industrial;
 /////////////////////////////
 extern Model floorplan_v1;
 extern Model peteypie;
+extern Model demon_spider_monkey_model;
 extern Vector3 floorplan_position;
 
 extern BoundingBox floorplan_bbox;

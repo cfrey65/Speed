@@ -24,13 +24,14 @@ Texture2D Industrial;
 /////////////////////////////
 Model floorplan_v1;
 Model peteypie;
+Model demon_spider_monkey_model;
 
 BoundingBox floorplan_bbox;
 
 //If you want to attach a texture to a model consult the castle example on Raylib
 void models() {
     floorplan_v1 = LoadModel("game/models/floorplan_v1.obj");
-    
+    demon_spider_monkey_model = LoadModel("game/models/demon_spider_monkey_model.obj");
     peteypie = LoadModel("game/models/peteypie.png");
 }
 
@@ -60,6 +61,7 @@ void load_textures_and_models() {
     //Connect textures and models with each other when needed
     floorplan_v1.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
     peteypie.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = purdue_pete;
+    demon_spider_monkey_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = spider_demon_model;
     floorplan_bbox = GetMeshBoundingBox(floorplan_v1.meshes[0]);
 }
 
