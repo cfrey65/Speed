@@ -193,7 +193,6 @@ void GAME_inputHandle() {
     if (IsKeyPressed(KEY_ESCAPE)) {
         EnableCursor();
     }
-    
 }
 
 void LoadCollisionBounds() {
