@@ -201,29 +201,46 @@ void GAME_loadGame(void* game_state) {
 
 }
 
-bool CheckPlayerCollision() {
-    // GAME* game = (GAME*)mainGame->game;
-    // Vector3* playerPos = (Vector3*)&game->playerPos;
+bool WallProbe() {
+
     
-    // // Get ray and test against objects
-    // collisionRay = GetScreenToWorldRay(GetMousePosition(), game->cam);
-    // // Test ray collision with map's bbox
-    // mapHitInfo = GetRayCollisionBox(collisionRay, floorplan_bbox);
-    // // Collision if within a certain distance
-    // playerCollision = mapHitInfo;
-    // // Check ray collision against model meshes
-    // printf("%d meshes\n", floorplan_v1.meshCount);
-    // for (int m = 0; m < floorplan_v1.meshCount; m++) {
-    //     meshHitInfo = GetRayCollisionMesh(collisionRay, floorplan_v1.meshes[m], floorplan_v1.transform);
-    //     if (meshHitInfo.hit) {
-    //         // Save the closest hit mesh
-    //         if ((!playerCollision.hit) || (playerCollision.distance > meshHitInfo.distance)) {
-    //             playerCollision = meshHitInfo;
-    //             return true;  // Stop once one mesh collision is detected, the colliding mesh is m
-    //         }   
-    //     }
-    // }
-    return false;    
+}
+
+void UpdatePlayer() {
+    GAME* game = (GAME*)mainGame->game;
+    Camera3D* cam = &(game->cam);
+
+    printf("CAM TARGET: %f %f %f\n", cam->pos.x, cam->pos.y, cam->pos.z);
+
+    UpdateCameraPro(&game->cam,
+        (Vector3){
+            M_STEP * (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) -      // Move forward-backward
+            M_STEP * (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+            M_STEP * (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE -   // Move right-left
+            M_STEP * (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+            0.0f                                                // Move up-down
+        },
+        (Vector3){
+            L_STEP * GetMouseDelta().x,                            // Rotation: yaw
+            L_STEP * GetMouseDelta().y,                            // Rotation: pitch
+            0.0f                                                // Rotation: roll
+        },
+        GetMouseWheelMove()*2.0f);
+        
+    if (CheckPlayerCollision()) {
+        UpdateCameraPro(&game->cam,
+            (Vector3){
+                -1.0f*(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))*0.1f*MOVEMENT_SPEED_SCALE +      // Move forward-backward
+                (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+                -1.0f*(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE +   // Move right-left
+                (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+                0.0f                                                // Move up-down
+            },
+            (Vector3){
+                0.0f, 0.0f, 0.0f                                       // Rotation: roll
+            },
+            0.0f);
+    }
 }
 
 void GAME_updateGame() {
