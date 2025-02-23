@@ -26,6 +26,9 @@ extern Model Walc_Backwall;
 extern Model Walc_Door;
 extern Model Walc_Sidewall2;
 extern Model Walc_SideWalls;
+extern Model Elliptical_Track;
+extern Model Inside_Track;
+extern Model Lowpoly_tree_sample;
 
 extern BoundingBox floorplan_bbox;
 
@@ -33,10 +36,11 @@ extern BoundingBox floorplan_bbox;
 // The actual "game code"
 // Called by the game engine each frame or upon specific events
 void GAME_loadGame(void* game_state);
+void LoadCollisionBounds(); // Populates the Rectangle array in "map_bounds"
 void GAME_drawGame();
 void GAME_updateGame();
 void GAME_inputHandle();
 void GAME_pauseGame();
 void GAME_resumeGame();
-
-bool CheckPlayerCollision();
+// Check if player is about to move out-of-bounds
+bool WallProbe(Camera3D* camera);

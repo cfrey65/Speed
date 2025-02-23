@@ -32,6 +32,11 @@ Model Walc_Backwall;
 Model Walc_Door;
 Model Walc_Sidewall2;
 Model Walc_SideWalls;
+Model racetrack_inside_v1;
+Model racetrack_v1;
+Model Elliptical_Track;
+Model Inside_Track;
+Model Lowpoly_tree_sample;
 
 BoundingBox floorplan_bbox;
 
@@ -41,11 +46,15 @@ void models() {
     demon_spider_monkey_model = LoadModel("game/models/demon_spider_monkey_model.obj");
     peteypie = LoadModel("game/models/peteypie.obj");
     racetrack_v1 = LoadModel("game/models/racetrack_v1.obj");
+    racetrack_inside_v1 = LoadModel("game/models/racetrack_inside_v1.obj");
     Walc_Baseplate = LoadModel("game/models/Walc_Baseplate.obj");
     Walc_Backwall = LoadModel("game/models/Walc_Backwall.obj");
     Walc_Door = LoadModel("game/models/Walc_Door.obj");
     Walc_Sidewall2 = LoadModel("game/models/Walc_Sidewall2.obj");
     Walc_SideWalls = LoadModel("game/models/Walc_SideWalls.obj");
+    Elliptical_Track = LoadModel("game/models/Elliptical_Track.obj");
+    Inside_Track = LoadModel("game/models/Inside_Track.obj");
+    Lowpoly_tree_sample = LoadModel("game/models/Lowpoly_tree_sample.obj");
 }
 
 void textures() {
