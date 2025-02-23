@@ -99,6 +99,10 @@ void GAME_drawGame() {
     BeginMode3D(game->cam);
         DrawModel(game->model, game->mapPos, 1.0f, BLACK);   
         DrawModel(game->playerModel, game->playerPos, 1.0f, BLACK);
+        for (size_t i = 0; i < game->hams[0]; i++) {
+            game->hammers[i].pos.z += game->hammers[i].speed;
+            DrawCubeWires(game->hammers[i].pos, 50, 50, 70, BLACK)
+        }
         DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE); 
     EndMode3D();
     
@@ -122,8 +126,16 @@ void GAME_inputHandle() {
         }
     }
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        //DrawCubeWires(Vector3 position, float width, float height, float length, BLACK);
-        //hammer h = {.}
+        if (game->hams[0] == 0) {
+            game->hammers = realloc(game->hammers, game->hams[1]*sizeof(hammer));
+        }
+        if (game->hams[0] + 1 > game->hams[1]) {
+            game->hammers = realloc(game->hammers, game->hams[1]*sizeof(hammer)*2);
+            game->hams[1]*=2;
+        }
+        hammer h = {.speed = 1.1, .pos.x = game->playerPos.x+1.1, .pos.y = game->playerPos.y, .pos.z = game->playerPos.z};
+        game->hammers[game->hams[0]] = h;
+        DrawCubeWires(h.pos, 50, 50, 70, BLACK);
     }
 }
 
