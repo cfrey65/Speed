@@ -24,10 +24,19 @@ typedef struct env {
     Model playerModel;
     enemy* enemies;
     hammer* hammers;
-    size_t hams [2];
 } GAME;
 
 Vector3 floorplan_position;
+Vector3 purdue_pete_position;
+Vector3 spider_demon_position;
+int MOVEMENT_SPEED_SCALE = 3;
+int LOOK_SPEED_SCALE = 2;
+
+Ray collisionRay = { 0 };
+RayCollision meshHitInfo = { 0 };
+RayCollision mapHitInfo = { 0 };
+RayCollision playerCollision = { 0 };
+
 
 int main(int argc, char** argv) {
     // Fairly basic game structure
@@ -96,19 +105,18 @@ void GAME_drawGame() {
     GAME* game = (GAME*)mainGame->game;
     Texture2D* cubicmap = &(game->cubicmap);
 
-    ClearBackground(GOLD);
+    ClearBackground(LIGHTGRAY);
     BeginMode3D(game->cam);
         DrawModel(game->model, game->mapPos, 1.0f, BLACK);   
         DrawModel(game->playerModel, game->playerPos, 1.0f, BLACK);
-<<<<<<< HEAD
-        DrawModel(floorplan_v1, floorplan_position, 1.0f, WHITE);
-        for (size_t i = 0; i < game->hams[0]; i++) {
+        for (size_t i = 0; i < game->hammers[0].speed; i++) {
             game->hammers[i].pos.z += game->hammers[i].speed;
-            DrawCubeWires(game->hammers[i].pos, 50, 50, 70, BLACK)
+            DrawCubeWires(game->hammers[i].pos, 50, 50, 70, BLACK);
         }
-=======
-        DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE); 
->>>>>>> ea75dd052fb74088ec09d9271ce6c94d283abfb0
+        DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE);
+        DrawModelEx(peteypie, purdue_pete_position, (Vector3){0, 1, 0}, 90, (Vector3){3, 3, 3}, GOLD);
+        DrawModelEx(demon_spider_monkey_model, spider_demon_position, (Vector3){0, 1, 0}, 90, (Vector3){3, 3, 3}, RED);
+        
     EndMode3D();
     
     DrawTextureEx(*cubicmap, (Vector2){ GetScreenWidth() - cubicmap->width*4.0f - 20, 20.0f }, 0.0f, 4.0f, MAROON);
@@ -116,7 +124,7 @@ void GAME_drawGame() {
                 cubicmap->width*4, cubicmap->height*4, ORANGE);
     
     // Draw player position radar
-    DrawRectangle(GetScreenWidth() - cubicmap->width*4 - 20 + game->playerCellX*4, 20 + game->playerCellY*4, 4, 4, RED);
+    //DrawRectangle(GetScreenWidth() - cubicmap->width*4 - 20 + game->playerCellX*4, 20 + game->playerCellY*4, 4, 4, RED);
     DrawFPS(10, 10);
 }
 
@@ -130,18 +138,28 @@ void GAME_inputHandle() {
             return;
         }
     }
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        if (game->hams[0] == 0) {
-            game->hammers = realloc(game->hammers, game->hams[1]*sizeof(hammer));
+    // if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+    //     if (game->hammers[0] == 0) {
+    //         game->hammers = realloc(game->hammers, game->hammers[1]*sizeof(hammer));
+    //     }
+    //     if (game->hammers[0] + 1 > game->hammers[1]) {
+    //         game->hammers = realloc(game->hammers, game->hammers[1]*sizeof(hammer)*2);
+    //         game->hammers[1]*=2;
+    //     }
+    //     hammer h = {.speed = 1.1, .pos.x = game->playerPos.x+1.1, .pos.y = game->playerPos.y, .pos.z = game->playerPos.z};
+    //     game->hammers[game->hammers[0]] = h;
+    //     DrawCubeWires(h.pos, 50, 50, 70, BLACK);
+    // }
+    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){ 0, 0, GetScreenWidth(), GetScreenHeight() })) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            DisableCursor();
         }
-        if (game->hams[0] + 1 > game->hams[1]) {
-            game->hammers = realloc(game->hammers, game->hams[1]*sizeof(hammer)*2);
-            game->hams[1]*=2;
-        }
-        hammer h = {.speed = 1.1, .pos.x = game->playerPos.x+1.1, .pos.y = game->playerPos.y, .pos.z = game->playerPos.z};
-        game->hammers[game->hams[0]] = h;
-        DrawCubeWires(h.pos, 50, 50, 70, BLACK);
     }
+    // Release mouse cursor if you press ESCAPE
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        EnableCursor();
+    }
+    
 }
 
 void GAME_loadGame(void* game_state) {
@@ -150,33 +168,91 @@ void GAME_loadGame(void* game_state) {
 
     // Define the camera to look into our 3d world
     gm->cam = (Camera){ 0 };
-    gm->cam.position = (Vector3){ 16.0f, 0.0f, 16.0f };     // Camera position
+    gm->cam.position = (Vector3){ 16.0f, 5.0f, 16.0f };     // Camera position
     gm->cam.target = (Vector3){ 0.0f, 0.0f, 0.0f };          // Camera looking at point
     gm->cam.up = (Vector3){ 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     gm->cam.fovy = 45.0f;                                    // Camera field-of-view Y
     gm->cam.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
 
-    floorplan_position = (Vector3){0.0f, 0.0f, 0.0f }; //Wish this could be initialized seperately from the other models
+    floorplan_position = (Vector3){0.0f, 0.0f, 0.0f };
+    purdue_pete_position = (Vector3){-50.0f, 4.0f, -39.0f };
+    spider_demon_position = (Vector3){-50.0f, 4.5f, 0.0f};
     // Load cubicmap image (RAM)
     /*gm->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
-    Mesh mesh = GenMeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
+    Mesh mesh = GenMfeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
     gm->model = LoadModelFromMesh(mesh);*/
 
     // NOTE: By default each cube is mapped to one part of texture atlas
     //Texture2D texture = LoadTexture("game/textures/guytex.png");    // Load map texture
-    //gm->model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;    // Set map diffuse texture
+    //gm->model.matersials[0].maps[MATERIAL_MAP_DIFFUSE].texture = texture;    // Set map diffuse texture
 
     gm->mapPos  = (Vector3){ -16.0f, 0.0f, -8.0f }; // Set model position
 
-    //UnloadImage(imMap);     // Unload cubesmap image from RAM, already uploaded to VRAM
-                             // Pause camera orbital rotation (and zoom)
+    playerCollision.distance = 1.0f;
+    playerCollision.hit = false;
+
+
+    gm->hammers = malloc(sizeof(hammer));
+
+}
+
+bool CheckPlayerCollision() {
+    // GAME* game = (GAME*)mainGame->game;
+    // Vector3* playerPos = (Vector3*)&game->playerPos;
+    
+    // // Get ray and test against objects
+    // collisionRay = GetScreenToWorldRay(GetMousePosition(), game->cam);
+    // // Test ray collision with map's bbox
+    // mapHitInfo = GetRayCollisionBox(collisionRay, floorplan_bbox);
+    // // Collision if within a certain distance
+    // playerCollision = mapHitInfo;
+    // // Check ray collision against model meshes
+    // printf("%d meshes\n", floorplan_v1.meshCount);
+    // for (int m = 0; m < floorplan_v1.meshCount; m++) {
+    //     meshHitInfo = GetRayCollisionMesh(collisionRay, floorplan_v1.meshes[m], floorplan_v1.transform);
+    //     if (meshHitInfo.hit) {
+    //         // Save the closest hit mesh
+    //         if ((!playerCollision.hit) || (playerCollision.distance > meshHitInfo.distance)) {
+    //             playerCollision = meshHitInfo;
+    //             return true;  // Stop once one mesh collision is detected, the colliding mesh is m
+    //         }   
+    //     }
+    // }
+    return false;    
 }
 
 void GAME_updateGame() {
     GAME* game = (GAME*)mainGame->game;
     if (!game->paused) {
-        //Camera3D oldCam = game->cam;
-        UpdateCamera(&game->cam, CAMERA_FIRST_PERSON);
+        UpdateCameraPro(&game->cam,
+            (Vector3){
+                (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))*0.1f*MOVEMENT_SPEED_SCALE -      // Move forward-backward
+                (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+                (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE -   // Move right-left
+                (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+                0.0f                                                // Move up-down
+            },
+            (Vector3){
+                GetMouseDelta().x*0.05f*LOOK_SPEED_SCALE,                            // Rotation: yaw
+                GetMouseDelta().y*0.05f*LOOK_SPEED_SCALE,                            // Rotation: pitch
+                0.0f                                                // Rotation: roll
+            },
+            GetMouseWheelMove()*2.0f);
+            
+        if (CheckPlayerCollision()) {
+            UpdateCameraPro(&game->cam,
+                (Vector3){
+                    -1.0f*(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))*0.1f*MOVEMENT_SPEED_SCALE +      // Move forward-backward
+                    (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+                    -1.0f*(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE +   // Move right-left
+                    (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+                    0.0f                                                // Move up-down
+                },
+                (Vector3){
+                    0.0f, 0.0f, 0.0f                                              // Rotation: roll
+                },
+                0.0f);
+        }
         
         Vector2 playerPos = {game->cam.position.x, game->cam.position.z};
         game->playerCellX = (int)(playerPos.x - game->mapPos.x + 0.5f);
@@ -193,7 +269,5 @@ void GAME_updateGame() {
         else if (game->playerCellY >= game->cubicmap.height) {
             game->playerCellY = game->cubicmap.height - 1;
         }
-        
-        // Add collision detection
     }
 }
