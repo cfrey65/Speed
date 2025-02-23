@@ -175,7 +175,7 @@ void GAME_loadGame(void* game_state) {
     gm->cam.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
 
     floorplan_position = (Vector3){0.0f, 0.0f, 0.0f };
-    purdue_pete_position = (Vector3){-50.0f, 4.5f, 0.0f };
+    purdue_pete_position = (Vector3){-50.0f, 4.5f, -39.0f };
     spider_demon_position = (Vector3){-50.0f, 4.5f, 0.0f};
     // Load cubicmap image (RAM)
     /*gm->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
