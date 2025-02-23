@@ -112,7 +112,8 @@ void GAME_drawGame() {
             game->hammers[i].pos.z += game->hammers[i].speed;
             DrawCubeWires(game->hammers[i].pos, 50, 50, 70, BLACK)
         }
-        DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE); 
+        DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE);
+        DrawModelEx(peteypie, purdue_pete_position, (Vecoto3)) 
     EndMode3D();
     
     DrawTextureEx(*cubicmap, (Vector2){ GetScreenWidth() - cubicmap->width*4.0f - 20, 20.0f }, 0.0f, 4.0f, MAROON);
@@ -166,7 +167,7 @@ void GAME_loadGame(void* game_state) {
     gm->cam.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
 
     floorplan_position = (Vector3){0.0f, 0.0f, 0.0f };
-    purdue_pete_position = (Vector3){} //Wish this could be initialized seperately from the other models
+    purdue_pete_position = (Vector3){31.0f, 5.0f, 16.0f };
     // Load cubicmap image (RAM)
     /*gm->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
     Mesh mesh = GenMfeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
@@ -183,27 +184,27 @@ void GAME_loadGame(void* game_state) {
 }
 
 bool CheckPlayerCollision() {
-    GAME* game = (GAME*)mainGame->game;
-    Vector3* playerPos = (Vector3*)&game->playerPos;
+    // GAME* game = (GAME*)mainGame->game;
+    // Vector3* playerPos = (Vector3*)&game->playerPos;
     
-    // Get ray and test against objects
-    collisionRay = GetScreenToWorldRay(GetMousePosition(), game->cam);
-    // Test ray collision with map's bbox
-    mapHitInfo = GetRayCollisionBox(collisionRay, floorplan_bbox);
-    // Collision if within a certain distance
-    playerCollision = mapHitInfo;
-    // Check ray collision against model meshes
-    printf("%d meshes\n", floorplan_v1.meshCount);
-    for (int m = 0; m < floorplan_v1.meshCount; m++) {
-        meshHitInfo = GetRayCollisionMesh(collisionRay, floorplan_v1.meshes[m], floorplan_v1.transform);
-        if (meshHitInfo.hit) {
-            // Save the closest hit mesh
-            if ((!playerCollision.hit) || (playerCollision.distance > meshHitInfo.distance)) {
-                playerCollision = meshHitInfo;
-                return true;  // Stop once one mesh collision is detected, the colliding mesh is m
-            }   
-        }
-    }
+    // // Get ray and test against objects
+    // collisionRay = GetScreenToWorldRay(GetMousePosition(), game->cam);
+    // // Test ray collision with map's bbox
+    // mapHitInfo = GetRayCollisionBox(collisionRay, floorplan_bbox);
+    // // Collision if within a certain distance
+    // playerCollision = mapHitInfo;
+    // // Check ray collision against model meshes
+    // printf("%d meshes\n", floorplan_v1.meshCount);
+    // for (int m = 0; m < floorplan_v1.meshCount; m++) {
+    //     meshHitInfo = GetRayCollisionMesh(collisionRay, floorplan_v1.meshes[m], floorplan_v1.transform);
+    //     if (meshHitInfo.hit) {
+    //         // Save the closest hit mesh
+    //         if ((!playerCollision.hit) || (playerCollision.distance > meshHitInfo.distance)) {
+    //             playerCollision = meshHitInfo;
+    //             return true;  // Stop once one mesh collision is detected, the colliding mesh is m
+    //         }   
+    //     }
+    // }
     return false;    
 }
 
