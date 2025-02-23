@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     //TODO ... ... ...
 
     // 2. Call "CreateGameInstance()" to allocate mem for the game instance
-    if (CreateGameInstance(1000, 700) 
+    if (CreateGameInstance(2000, 1400) 
         == EXIT_FAILURE) {
         if (mainGame != NULL) {
             free(mainGame);
@@ -99,7 +99,7 @@ void GAME_drawGame() {
     BeginMode3D(game->cam);
         DrawModel(game->model, game->mapPos, 1.0f, BLACK);   
         DrawModel(game->playerModel, game->playerPos, 1.0f, BLACK);
-        DrawModel(floorplan_v1, floorplan_position, 1.0f, WHITE); 
+        DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE); 
     EndMode3D();
     
     DrawTextureEx(*cubicmap, (Vector2){ GetScreenWidth() - cubicmap->width*4.0f - 20, 20.0f }, 0.0f, 4.0f, MAROON);
@@ -133,7 +133,7 @@ void GAME_loadGame(void* game_state) {
 
     // Define the camera to look into our 3d world
     gm->cam = (Camera){ 0 };
-    gm->cam.position = (Vector3){ 16.0f, 14.0f, 16.0f };     // Camera position
+    gm->cam.position = (Vector3){ 16.0f, 0.0f, 16.0f };     // Camera position
     gm->cam.target = (Vector3){ 0.0f, 0.0f, 0.0f };          // Camera looking at point
     gm->cam.up = (Vector3){ 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     gm->cam.fovy = 45.0f;                                    // Camera field-of-view Y
