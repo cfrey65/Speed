@@ -17,7 +17,15 @@ extern Texture2D Industrial;
 /////////////////////////////
 extern Model floorplan_v1;
 extern Model peteypie;
+extern Model demon_spider_monkey_model;
 extern Vector3 floorplan_position;
+extern Model racetrack_v1;
+extern Model racetrack_inside_v1;
+extern Model Walc_Baseplate;
+extern Model Walc_Backwall;
+extern Model Walc_Door;
+extern Model Walc_Sidewall2;
+extern Model Walc_SideWalls;
 
 extern BoundingBox floorplan_bbox;
 

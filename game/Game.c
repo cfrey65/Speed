@@ -29,6 +29,8 @@ typedef struct env {
 Vector3 floorplan_position;
 Vector3 purdue_pete_position;
 Vector3 spider_demon_position;
+Vector3 baseplate_position;
+Vector3 walc_backwall_pos;
 int MOVEMENT_SPEED_SCALE = 3;
 int LOOK_SPEED_SCALE = 2;
 
@@ -116,7 +118,8 @@ void GAME_drawGame() {
         DrawModelEx(floorplan_v1, floorplan_position, (Vector3){1, 0, 0}, -90, (Vector3){1, 1, 1}, WHITE);
         DrawModelEx(peteypie, purdue_pete_position, (Vector3){0, 1, 0}, 90, (Vector3){3, 3, 3}, GOLD);
         DrawModelEx(demon_spider_monkey_model, spider_demon_position, (Vector3){0, 1, 0}, 90, (Vector3){3, 3, 3}, RED);
-        
+        DrawModelEx(Walc_Baseplate, baseplate_position, (Vector3){1, 0, 0}, 90, (Vector3){1000, 1000, 1000}, GRAY);
+        DrawModelEx(Walc_Backwall, walc_backwall_pos, (Vector3){1, 0, 0}, -90, (Vector3){1000, 1000, 1000}, GRAY);
     EndMode3D();
     
     DrawTextureEx(*cubicmap, (Vector2){ GetScreenWidth() - cubicmap->width*4.0f - 20, 20.0f }, 0.0f, 4.0f, MAROON);
@@ -175,8 +178,10 @@ void GAME_loadGame(void* game_state) {
     gm->cam.projection = CAMERA_PERSPECTIVE;                 // Camera projection type
 
     floorplan_position = (Vector3){0.0f, 0.0f, 0.0f };
-    purdue_pete_position = (Vector3){-50.0f, 4.0f, -39.0f };
+    purdue_pete_position = (Vector3){-50.0f, 4.5f, -39.0f };
     spider_demon_position = (Vector3){-50.0f, 4.5f, 0.0f};
+    baseplate_position = (Vector3){-200.0f, 0.0f, 0.0f};
+    walc_backwall_pos = (Vector3){-121.0f, 20.0f, 5.0f};
     // Load cubicmap image (RAM)
     /*gm->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
     Mesh mesh = GenMfeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
@@ -196,29 +201,46 @@ void GAME_loadGame(void* game_state) {
 
 }
 
-bool CheckPlayerCollision() {
-    // GAME* game = (GAME*)mainGame->game;
-    // Vector3* playerPos = (Vector3*)&game->playerPos;
+bool WallProbe() {
+
     
-    // // Get ray and test against objects
-    // collisionRay = GetScreenToWorldRay(GetMousePosition(), game->cam);
-    // // Test ray collision with map's bbox
-    // mapHitInfo = GetRayCollisionBox(collisionRay, floorplan_bbox);
-    // // Collision if within a certain distance
-    // playerCollision = mapHitInfo;
-    // // Check ray collision against model meshes
-    // printf("%d meshes\n", floorplan_v1.meshCount);
-    // for (int m = 0; m < floorplan_v1.meshCount; m++) {
-    //     meshHitInfo = GetRayCollisionMesh(collisionRay, floorplan_v1.meshes[m], floorplan_v1.transform);
-    //     if (meshHitInfo.hit) {
-    //         // Save the closest hit mesh
-    //         if ((!playerCollision.hit) || (playerCollision.distance > meshHitInfo.distance)) {
-    //             playerCollision = meshHitInfo;
-    //             return true;  // Stop once one mesh collision is detected, the colliding mesh is m
-    //         }   
-    //     }
-    // }
-    return false;    
+}
+
+void UpdatePlayer() {
+    GAME* game = (GAME*)mainGame->game;
+    Camera3D* cam = &(game->cam);
+
+    printf("CAM TARGET: %f %f %f\n", cam->pos.x, cam->pos.y, cam->pos.z);
+
+    UpdateCameraPro(&game->cam,
+        (Vector3){
+            M_STEP * (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) -      // Move forward-backward
+            M_STEP * (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+            M_STEP * (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE -   // Move right-left
+            M_STEP * (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+            0.0f                                                // Move up-down
+        },
+        (Vector3){
+            L_STEP * GetMouseDelta().x,                            // Rotation: yaw
+            L_STEP * GetMouseDelta().y,                            // Rotation: pitch
+            0.0f                                                // Rotation: roll
+        },
+        GetMouseWheelMove()*2.0f);
+        
+    if (CheckPlayerCollision()) {
+        UpdateCameraPro(&game->cam,
+            (Vector3){
+                -1.0f*(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))*0.1f*MOVEMENT_SPEED_SCALE +      // Move forward-backward
+                (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+                -1.0f*(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE +   // Move right-left
+                (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+                0.0f                                                // Move up-down
+            },
+            (Vector3){
+                0.0f, 0.0f, 0.0f                                       // Rotation: roll
+            },
+            0.0f);
+    }
 }
 
 void GAME_updateGame() {
