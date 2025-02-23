@@ -17,6 +17,7 @@ Texture2D purdue_bumblebee;
 Texture2D purdue_boss_galaga;
 Texture2D purdue_boss_galaga_laser;
 Texture2D purdue_bosconian;
+Texture2D Industrial;
 
 /////////////////////////////
 // Global model variables
@@ -24,9 +25,12 @@ Texture2D purdue_bosconian;
 Model floorplan_v1;
 Model peteypie;
 
+BoundingBox floorplan_bbox;
+
 //If you want to attach a texture to a model consult the castle example on Raylib
 void models() {
     floorplan_v1 = LoadModel("game/models/floorplan_v1.obj");
+    
     //peteypie = LoadModel("game/models/peteypie.png");
 }
 
@@ -46,6 +50,7 @@ void textures() {
     purdue_boss_galaga = LoadTexture("game/textures/purdue_boss_galaga.png");
     purdue_boss_galaga_laser = LoadTexture("game/textures/purdue_boss_galaga_laser.png");
     purdue_bosconian = LoadTexture("game/textures/purdue_bosconian.png");
+    Industrial = LoadTexture("game/textures/Industrial.png");
 }
 
 void load_textures_and_models() {
@@ -53,7 +58,8 @@ void load_textures_and_models() {
     models();
 
     //Connect textures and models with each other when needed
-    floorplan_v1.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = purdue_pete;
+    floorplan_v1.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = Industrial;
+    floorplan_bbox = GetMeshBoundingBox(floorplan_v1.meshes[0]);
 }
 
 /*Examples:

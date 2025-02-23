@@ -11,13 +11,15 @@ extern Texture2D purdue_scorpion; extern Texture2D purdue_galaxian;
 extern Texture2D purdue_galaga; extern Texture2D purdue_butterfly;
 extern Texture2D purdue_bumblebee; extern Texture2D purdue_boss_galaga;
 extern Texture2D purdue_boss_galaga_laser; extern Texture2D purdue_bosconian;
-
+extern Texture2D Industrial;
 /////////////////////////////
 // Global model variables
 /////////////////////////////
 extern Model floorplan_v1;
 extern Model peteypie;
 extern Vector3 floorplan_position;
+
+extern BoundingBox floorplan_bbox;
 
 // Implementations pointed to by "mainGame"
 // The actual "game code"
@@ -28,3 +30,5 @@ void GAME_updateGame();
 void GAME_inputHandle();
 void GAME_pauseGame();
 void GAME_resumeGame();
+
+bool CheckPlayerCollision();

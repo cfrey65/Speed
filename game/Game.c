@@ -27,6 +27,14 @@ typedef struct env {
 } GAME;
 
 Vector3 floorplan_position;
+int MOVEMENT_SPEED_SCALE = 3;
+int LOOK_SPEED_SCALE = 2;
+
+Ray collisionRay = { 0 };
+RayCollision meshHitInfo = { 0 };
+RayCollision mapHitInfo = { 0 };
+RayCollision playerCollision = { 0 };
+
 
 int main(int argc, char** argv) {
     // Fairly basic game structure
@@ -121,10 +129,18 @@ void GAME_inputHandle() {
             return;
         }
     }
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        //DrawCubeWires(Vector3 position, float width, float height, float length, BLACK);
-        //hammer h = {.}
+    
+    // Capture mouse cursor if clicked inside window
+    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){ 0, 0, GetScreenWidth(), GetScreenHeight() })) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            DisableCursor();
+        }
     }
+    // Release mouse cursor if you press ESCAPE
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        EnableCursor();
+    }
+    
 }
 
 void GAME_loadGame(void* game_state) {
@@ -133,7 +149,7 @@ void GAME_loadGame(void* game_state) {
 
     // Define the camera to look into our 3d world
     gm->cam = (Camera){ 0 };
-    gm->cam.position = (Vector3){ 16.0f, 0.0f, 16.0f };     // Camera position
+    gm->cam.position = (Vector3){ 16.0f, 5.0f, 16.0f };     // Camera position
     gm->cam.target = (Vector3){ 0.0f, 0.0f, 0.0f };          // Camera looking at point
     gm->cam.up = (Vector3){ 0.0f, 1.0f, 0.0f };              // Camera up vector (rotation towards target)
     gm->cam.fovy = 45.0f;                                    // Camera field-of-view Y
@@ -142,7 +158,7 @@ void GAME_loadGame(void* game_state) {
     floorplan_position = (Vector3){0.0f, 0.0f, 0.0f }; //Wish this could be initialized seperately from the other models
     // Load cubicmap image (RAM)
     /*gm->cubicmap = LoadTextureFromImage(imMap);       // Convert image to texture to display (VRAM)
-    Mesh mesh = GenMeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
+    Mesh mesh = GenMfeshCubicmap(imMap, (Vector3){ 1.0f, 1.0f, 1.0f });
     gm->model = LoadModelFromMesh(mesh);*/
 
     // NOTE: By default each cube is mapped to one part of texture atlas
@@ -151,15 +167,67 @@ void GAME_loadGame(void* game_state) {
 
     gm->mapPos  = (Vector3){ -16.0f, 0.0f, -8.0f }; // Set model position
 
-    //UnloadImage(imMap);     // Unload cubesmap image from RAM, already uploaded to VRAM
-                             // Pause camera orbital rotation (and zoom)
+    playerCollision.distance = 1.0f;
+    playerCollision.hit = false;
+}
+
+bool CheckPlayerCollision() {
+    GAME* game = (GAME*)mainGame->game;
+    Vector3* playerPos = (Vector3*)&game->playerPos;
+    
+    // Get ray and test against objects
+    collisionRay = GetScreenToWorldRay(GetMousePosition(), game->cam);
+    // Test ray collision with map's bbox
+    mapHitInfo = GetRayCollisionBox(collisionRay, floorplan_bbox);
+    // Collision if within a certain distance
+    playerCollision = mapHitInfo;
+    // Check ray collision against model meshes
+    printf("%d meshes\n", floorplan_v1.meshCount);
+    for (int m = 0; m < floorplan_v1.meshCount; m++) {
+        meshHitInfo = GetRayCollisionMesh(collisionRay, floorplan_v1.meshes[m], floorplan_v1.transform);
+        if (meshHitInfo.hit) {
+            // Save the closest hit mesh
+            if ((!playerCollision.hit) || (playerCollision.distance > meshHitInfo.distance)) {
+                playerCollision = meshHitInfo;
+                return true;  // Stop once one mesh collision is detected, the colliding mesh is m
+            }   
+        }
+    }
+    return false;    
 }
 
 void GAME_updateGame() {
     GAME* game = (GAME*)mainGame->game;
     if (!game->paused) {
-        //Camera3D oldCam = game->cam;
-        UpdateCamera(&game->cam, CAMERA_FIRST_PERSON);
+        UpdateCameraPro(&game->cam,
+            (Vector3){
+                (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))*0.1f*MOVEMENT_SPEED_SCALE -      // Move forward-backward
+                (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+                (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE -   // Move right-left
+                (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+                0.0f                                                // Move up-down
+            },
+            (Vector3){
+                GetMouseDelta().x*0.05f*LOOK_SPEED_SCALE,                            // Rotation: yaw
+                GetMouseDelta().y*0.05f*LOOK_SPEED_SCALE,                            // Rotation: pitch
+                0.0f                                                // Rotation: roll
+            },
+            GetMouseWheelMove()*2.0f);
+            
+        if (CheckPlayerCollision()) {
+            UpdateCameraPro(&game->cam,
+                (Vector3){
+                    -1.0f*(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))*0.1f*MOVEMENT_SPEED_SCALE +      // Move forward-backward
+                    (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))*0.1f*MOVEMENT_SPEED_SCALE,    
+                    -1.0f*(IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))*0.1f*MOVEMENT_SPEED_SCALE +   // Move right-left
+                    (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))*0.1f*MOVEMENT_SPEED_SCALE,
+                    0.0f                                                // Move up-down
+                },
+                (Vector3){
+                    0.0f, 0.0f, 0.0f                                              // Rotation: roll
+                },
+                0.0f);
+        }
         
         Vector2 playerPos = {game->cam.position.x, game->cam.position.z};
         game->playerCellX = (int)(playerPos.x - game->mapPos.x + 0.5f);
@@ -176,7 +244,5 @@ void GAME_updateGame() {
         else if (game->playerCellY >= game->cubicmap.height) {
             game->playerCellY = game->cubicmap.height - 1;
         }
-        
-        // Add collision detection
     }
 }
